@@ -1,0 +1,89 @@
+PRODPULSE ASSEMBLY TV DASHBOARD — PROPOSED FIRESTORE RULES ADDITION
+=====================================================================
+Status:   PROPOSAL ONLY. NOT APPLIED. NOT DEPLOYED.
+Project:  technico-industries-ltd
+Date:     2026-10-30
+
+The current Firestore rules are managed in the Firebase Console and were not
+available for this work. This is NOT a replacement rules file. Do not deploy
+it as one: replacing the rules would remove whatever the ProdPulse app
+currently relies on.
+
+
+1. BEFORE ADDING ANYTHING
+-------------------------
+  a. Export the current rules from Firebase Console -> Firestore Database ->
+     Rules, and keep a copy (ideally commit it as firestore.rules).
+  b. Review whether unauthenticated reads of productionRecords, activeSessions,
+     shiftSummaries, endedSessions, lineBreakdowns, users, operators are
+     already denied. If any are publicly readable today, fix that first —
+     the TV dashboard does not need them.
+  c. Use the Rules Playground (Console) to test the change below before
+     publishing.
+
+
+2. THE ADDITION (paste INSIDE the existing
+   `match /databases/{database}/documents { ... }` block)
+--------------------------------------------------------------------------
+
+    // Assembly TV dashboard read model — sanitised aggregates only.
+    // Written exclusively by Cloud Functions (Admin SDK bypasses rules).
+    match /tvDashboard/{document=**} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+Why this does not affect existing rules:
+  * Firestore rules grant access per path; this block matches only paths
+    under /tvDashboard. It grants nothing on any other collection.
+  * Every other match block stays exactly as it is.
+  * `allow write: if false` means no browser or app client can write the read
+    model. The Cloud Functions write it with the Admin SDK, which is not
+    subject to rules.
+  * Caveat: if the existing rules contain a broad recursive match such as
+    `match /{document=**} { allow write: if <something>; }`, that rule would
+    also apply to /tvDashboard and could allow writes there (rules combine
+    with OR). Check for this during step 1.
+
+
+3. WHAT BECOMES PUBLIC — REVIEW BEFORE DEPLOYMENT
+--------------------------------------------------
+With `allow read: if true`, ANYONE who knows the project ID (it is visible
+in any ProdPulse web build) can read, without signing in:
+  * tvDashboard/assembly — current production date and shift, Assembly KPIs
+    (good production, plan-to-date, achievement %, rejections, quality %,
+    downtime), line status counts, 7-day production / rejection trend,
+    Shift A vs B, downtime by reason, generation timestamps.
+  * tvDashboard/assembly/lines/{lineId} — every Assembly line's name, plant
+    (Bawal 1 / Bawal 2), division, status, current model/part name,
+    production, plan, achievement, rejections, downtime, current stop
+    category and start time.
+  * tvDashboard/assembly/days/{productionDate} — daily and per-shift totals.
+
+Not exposed (verified by unit tests): no supervisor or operator names,
+employee codes, UIDs, emails, device IDs, loss-reason notes, remarks or
+free-text stop reasons — unknown stop reasons are reported as "Other".
+
+This is still commercially sensitive factory performance data (output,
+efficiency, quality, downtime by line and model). The business should
+explicitly accept that before publishing the rule.
+
+
+4. LESS-PUBLIC ALTERNATIVES (choose one instead of `if true` if needed)
+-----------------------------------------------------------------------
+  A. Dedicated TV sign-in (no login screen on the TV beyond a one-time setup):
+       allow read: if request.auth != null
+                    && request.auth.token.tvDashboard == true;
+     A custom claim set once by an admin script on a dedicated TV account.
+
+  B. Anonymous Auth + App Check (web reCAPTCHA Enterprise), with App Check
+     enforcement enabled for Firestore:
+       allow read: if request.auth != null;
+     Limits reads to the registered TV site, though it is not a strong
+     identity boundary.
+
+  C. Any signed-in ProdPulse user:
+       allow read: if request.auth != null;
+     Simplest, but the TV then needs a real account.
+
+Whichever is chosen, keep `allow write: if false;`.

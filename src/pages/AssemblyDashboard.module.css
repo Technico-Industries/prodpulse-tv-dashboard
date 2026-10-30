@@ -1,0 +1,138 @@
+/* TV layout (≥1600px, designed at 1920×1080): fixed to the viewport.
+   ┌──────────────── header ────────────────┐
+   │ KPI │ KPI │ KPI │ KPI                   │
+   │ line status grid   │ production│reject. │
+   │ (paged)            │ downtime  │ shifts │
+   └─────────────────────────────────────────┘ */
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap);
+  height: 100vh;
+  padding: 20px 24px;
+  overflow: hidden;
+  background: var(--bg);
+}
+
+.main {
+  flex: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+  gap: var(--gap);
+  min-height: 0;
+}
+
+/* Stale / disconnected / partial-data warning — visible from a distance */
+.banner {
+  max-width: 640px;
+  padding: 7px 14px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.3;
+  text-align: center;
+}
+
+.bannerBad {
+  background: color-mix(in srgb, var(--status-stopped) 18%, var(--card));
+  border: 1px solid var(--status-stopped);
+}
+
+.bannerWarn {
+  background: color-mix(in srgb, var(--status-awaiting) 14%, var(--card));
+  border: 1px solid var(--status-awaiting);
+}
+
+/* Full-screen state before any data has been received */
+.statusScreen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  height: 100vh;
+  padding: 24px;
+  text-align: center;
+  background: var(--bg);
+}
+
+.statusIcon {
+  width: 56px;
+  height: 56px;
+  color: var(--muted);
+}
+
+.spin {
+  animation: spin 1.2s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spin { animation: none; }
+}
+
+.statusTitle {
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.statusLabel {
+  font-size: 40px;
+  font-weight: 800;
+}
+
+.statusDetail {
+  max-width: 720px;
+  font-size: 20px;
+  color: var(--muted);
+}
+
+.statusClock {
+  margin-top: 12px;
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--faint);
+}
+
+.lines {
+  min-height: 0;
+}
+
+.side {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-rows: repeat(2, minmax(0, 1fr));
+  gap: var(--gap);
+  min-height: 0;
+}
+
+/* Below TV width: stack and allow scrolling */
+@media (max-width: 1599px) {
+  .page {
+    height: auto;
+    min-height: 100vh;
+    padding: 16px;
+    overflow: visible;
+  }
+
+  .main {
+    grid-template-columns: 1fr;
+  }
+
+  .side {
+    grid-template-rows: none;
+    grid-auto-rows: 400px;
+  }
+}
+
+@media (max-width: 900px) {
+  .side {
+    grid-template-columns: 1fr;
+  }
+}

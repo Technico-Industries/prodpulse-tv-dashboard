@@ -1,0 +1,23 @@
+node_modules
+dist
+dist-ssr
+*.local
+
+# Environment files — never commit real Firebase values
+.env
+.env.local
+.env.*
+!.env.example
+
+# Firebase / service-account credentials must never live in this frontend
+*serviceAccount*.json
+*.pem
+*.jks
+
+# Logs & editor
+*.log
+npm-debug.log*
+.DS_Store
+.vscode/*
+!.vscode/extensions.json
+.idea

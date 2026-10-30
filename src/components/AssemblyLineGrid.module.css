@@ -1,0 +1,104 @@
+.panel {
+  height: 100%;
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.counts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.count {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  background: var(--surface);
+  border-radius: 8px;
+  font-size: 15px;
+  color: var(--muted);
+}
+
+.count strong {
+  font-size: 18px;
+  color: var(--ink);
+}
+
+.countIcon {
+  width: 16px;
+  height: 16px;
+}
+
+/* Fixed slots: the last page keeps the same card size and positions. */
+.grid {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: repeat(var(--cols), minmax(0, 1fr));
+  grid-template-rows: repeat(var(--rows), minmax(0, 1fr));
+  gap: 10px;
+}
+
+.empty {
+  flex: 1;
+  display: grid;
+  place-items: center;
+  min-height: 160px;
+  font-size: 18px;
+  color: var(--muted);
+}
+
+.pager {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.pager strong {
+  color: var(--ink);
+}
+
+.dots {
+  display: flex;
+  gap: 8px;
+}
+
+.dot,
+.dotActive {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--border);
+}
+
+.dotActive {
+  background: var(--ink);
+}
+
+/* Below TV width: cards flow at a fixed height instead of filling the panel */
+@media (max-width: 1599px) {
+  .grid {
+    grid-template-rows: none;
+    grid-auto-rows: 168px;
+  }
+}
+
+@media (max-width: 1100px) {
+  .grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}

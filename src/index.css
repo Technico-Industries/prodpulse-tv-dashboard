@@ -1,0 +1,69 @@
+/* Global tokens and base styles. Component styles live in *.module.css. */
+
+:root {
+  /* Surfaces */
+  --bg: #0b0b0b;
+  --card: #151515;
+  --surface: #1d1d1d;
+  --border: #2a2a2a;
+
+  /* Text */
+  --ink: #ffffff;
+  --muted: #a0a0a0;
+  --faint: #6e6e6e;
+
+  /* Status — restrained, reserved for line state; always with icon + label */
+  --status-running: #3fb950;
+  --status-awaiting: #d29922;
+  --status-stopped: #e5534b;
+  --status-idle: #8b949e;
+
+  /* Chart series (validated for colour-blind separation on --card) */
+  --series-1: #3b82f6;
+  --series-2: #c2569b;
+  --series-plan: #9a9a9a;
+  --series-neutral: #7d8590;
+
+  /* Demo-data marker */
+  --demo: #58a6ff;
+
+  --radius: 12px;
+  --gap: 16px;
+
+  --font: "Segoe UI", "Inter", Roboto, "Helvetica Neue", Arial, sans-serif;
+
+  color-scheme: dark;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font);
+  font-variant-numeric: tabular-nums;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3,
+p {
+  margin: 0;
+}
+
+/* Recharts focus outlines are noise on a wall display */
+.recharts-wrapper *:focus {
+  outline: none;
+}

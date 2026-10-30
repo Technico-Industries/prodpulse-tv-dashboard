@@ -1,0 +1,130 @@
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 1px;
+  min-height: 0;
+  min-width: 0;
+  padding: 10px 12px 8px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+/* Status colour bar across the top */
+.card::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 5px;
+  background: var(--status);
+}
+
+.stopped {
+  border-color: var(--status-stopped);
+}
+
+.name {
+  font-size: 24px;
+  font-weight: 800;
+  line-height: 1.1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.status {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--status);
+  white-space: nowrap;
+}
+
+.statusIcon {
+  width: 15px;
+  height: 15px;
+}
+
+.noPlan {
+  font-size: 15px;
+  color: var(--faint);
+}
+
+.model {
+  font-size: 15px;
+  color: var(--muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.stopNote {
+  color: var(--status-stopped);
+  font-weight: 600;
+}
+
+.outdated {
+  color: var(--status-awaiting);
+}
+
+/* Rejections · downtime (closed stops) */
+.meta2 {
+  font-size: 13px;
+  color: var(--muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.countRow {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  white-space: nowrap;
+}
+
+.count {
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1.05;
+}
+
+.plan {
+  font-size: 16px;
+  color: var(--muted);
+}
+
+.achievement {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.track {
+  flex: 1;
+  height: 8px;
+  background: var(--bg);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.fill {
+  height: 100%;
+  background: var(--ink);
+  opacity: 0.85;
+  border-radius: 4px;
+}
+
+.pct {
+  min-width: 48px;
+  font-size: 16px;
+  font-weight: 700;
+  text-align: right;
+}
